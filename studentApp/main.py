@@ -19,10 +19,11 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.dialog import MDDialog
 # from kivymd.uix.behaviors.backgroundcolor_behavior import BackgroundColorBehavior
 
-textColor = [0, 1, 0, 1]
+textColor = [0, 0, 0, 1]
 dialogTextColor = [0, 0, 0, 1]
-textInpBgColor = [0.83203125, 0.84765625, 0.8671875, 1]
-appBgColor = [0.390625, 0.32421875, 0.83203125, 1]
+textInpBgColor = [0.796875, 0.8984375, 0.99609375, 1]
+# appBgColor = [0.390625, 0.32421875, 0.83203125, 1]
+appBgColor = [0.30078125, 0.76171875, 0.99609375, 1]
 textLineColorFocus = [0.01171875, 0.515625, 0.984375, 1]
 textLineColorNormal = [0.984375, 0.53125, 0.0117, 1]
 
@@ -47,7 +48,7 @@ class StudentApp(MDApp):
         imageObj = Image(source="./assets/icon.png")
         # layout for image of logo
         imageLayout = MDBoxLayout(size_hint=(0.35, 0.35),
-                                  pos_hint={'x': 0.0, 'y': 0.2})
+                                  pos_hint={'x': 0.325, 'y': 0.2})
         imageLayout.add_widget(imageObj)
         # widgets for input
         rollNoL = MDLabel(text="  Roll No:", theme_text_color="Custom")
@@ -114,7 +115,7 @@ class StudentApp(MDApp):
         # self.dismissButton = MDRaisedButton(text="Okay",
         #                                     pos_hint={'x': 0.7})
         self.messageDialog = MDDialog(text="Dialog",
-                                      size_hint=(0.8, 0.9),
+                                      size_hint=(0.8, 0.2),
                                       radius=[20, 7, 20, 7])
         #   size_hint=(0.8, 0.9),
         #   pos_hint={'x': 0.1, 'y': 0.5},
@@ -152,6 +153,7 @@ class StudentApp(MDApp):
         # self.buttonObj.size_hint = (.2, .2)
         self.buttonObj.pos_hint = {'x': .45, 'bottom': 0.1}
         self.buttonObj.bind(on_press=self.takeImage)
+        self.buttonObj.md_bg_color = [0.796875, 0.8984375, 0.99609375, 1]
         # layout for camera and capture button
         myBoxLayout = MDBoxLayout(
             orientation="vertical",
