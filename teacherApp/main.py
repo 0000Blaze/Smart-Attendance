@@ -5,6 +5,7 @@ from server import client_teacher
 from kivymd.app import MDApp
 
 from kivy.uix.widget import Widget
+from kivymd.uix.label import MDLabel
 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
@@ -116,9 +117,9 @@ class AttendanceWindow(Screen):
                 keys = AttendanceListFromServer["student_list"]
                 for key in keys:
                     GlobalShared.attendanceList[key][1] = "Present"
-                    self.removePresentList()
+                    # self.removePresentList()
                 #display attendance list
-                self.addPresentList()
+                # self.addPresentList()
         except Exception as e:
             print(e)
 

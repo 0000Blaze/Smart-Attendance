@@ -18,7 +18,7 @@ WindowManager:
         
         Image:
             source: "assets/logo.png"
-            size_hint : 0.5 , 0.5
+            #size_hint : 0.5 , 0.5
 
         MDBoxLayout:
             id: teacherId_box
@@ -64,6 +64,8 @@ WindowManager:
                 root.startAttendanceSheet()
                 root.manager.current = 'attendance_control'
                 root.manager.transition.direction = 'left'
+                app.root.ids.attendance_control.updateAttendanceSheet()
+                app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
 
 <AttendanceWindow>
     name :'attendance_control'
@@ -71,13 +73,55 @@ WindowManager:
     MDBoxLayout:
         id : "attendance_box"
         orientation: 'vertical'
-        spacing: "56dp"
+        columns: 3
+        spacing: "40dp"
         pos_hint: {"center_x": .5, "center_y": .5}
         adaptive_height : True
         #md_bg_color : app.theme_cls.primary_color
 
+        MDBoxLayout:
+            id: "icon_back_container"
+            orientation : 'horizontal'
+            columns : 2
+            spacing: "20dp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: 0.5,1.0
+
+            Image:
+                source: "assets/logo.png"
+                size_hint : 0.2 , 0.2
+                size: 0.1,0.1
+            
+            MDRaisedButton:
+                text :"Back"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press:
+                    root.manager.current = 'login_control'
+                    root.manager.transition.direction = 'right'
+
+        MDBoxLayout:
+            id: "label_refresh_container"
+            orientation : 'horizontal'
+            columns : 2
+            spacing: "20dp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: 0.5,1.0
+
+            MDLabel:
+                id: attendance_code
+                text: root.attendanceInstance.field_AttendanceId
+ 
+            MDRaisedButton:
+                text:"Refresh"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press:
+                    root.attendanceInstance.setAttendanceId()
+                    root.updateAttendanceSheet()
+
         MDRaisedButton:
-            text :"back"
+            text:"Stop"
+            pos_hint: {"center_x": .5, "center_y": .5}
             on_press:
-                root.manager.current = 'login_control'
-                root.manager.transition.direction = 'right'
+                root.finalAttendanceSheet()
+
+
