@@ -1,0 +1,83 @@
+WindowManager:
+    LoginWindow:
+        id:login_control
+    AttendanceWindow:
+        id:attendance_control
+
+<LoginWindow>
+    name: 'login_control'
+    
+    MDBoxLayout:
+        id: first_box
+        columns : 5
+        spacing: "40dp"
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        orientation: 'vertical'
+        adaptive_height : True
+        #md_bg_color : app.theme_cls.primary_color
+        
+        Image:
+            source: "assets/logo.png"
+            size_hint : 0.5 , 0.5
+
+        MDBoxLayout:
+            id: teacherId_box
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            orientation: 'vertical'
+            adaptive_height : True
+            size_hint: 0.5,1.0
+ 
+            MDTextField:
+                id: teacherId
+                name:"teacherId"
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                hint_text: "Teacher Id"
+                mode: "rectangle"
+
+        MDRaisedButton:
+            text:"Connect"
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            md_bg_color: 1, 0, 1, 1
+            on_press:
+                root.stdTid.setTeacherId(app,teacherId)
+                root.getSubjectListAndClassList()
+                root.stdTid.setClassId()
+                root.stdTid.setSubjectCode()
+        
+        MDDropDownItem:
+            id: drop_item
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            text: 'Class'
+            on_release: self.set_item(root.stdTid.field_class)
+        
+        MDDropDownItem:
+            id: drop_item
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            text: 'Subject'
+            on_release: self.set_item(root.stdTid.field_subject)
+
+        MDRaisedButton:
+            text:"Start"
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            md_bg_color: 1, 0, 1, 1
+            on_press:
+                root.startAttendanceSheet()
+                root.manager.current = 'attendance_control'
+                root.manager.transition.direction = 'left'
+
+<AttendanceWindow>
+    name :'attendance_control'
+
+    MDBoxLayout:
+        id : "attendance_box"
+        orientation: 'vertical'
+        spacing: "56dp"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        adaptive_height : True
+        #md_bg_color : app.theme_cls.primary_color
+
+        MDRaisedButton:
+            text :"back"
+            on_press:
+                root.manager.current = 'login_control'
+                root.manager.transition.direction = 'right'

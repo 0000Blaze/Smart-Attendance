@@ -1,18 +1,17 @@
 import server.client_student
 
-
 import cv2
 import face_recognition
 import os
 
 
 from kivy.core.window import Window
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.uix.camera import Camera
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.label import MDLabel
 from kivy.uix.textinput import TextInput
 
 Window.size = (540, 960)
@@ -25,7 +24,7 @@ except:
     pass
 
 
-class StudentApp(App):
+class StudentApp(MDApp):
     rollNoSaved = ""
 
     def build(self):
@@ -36,8 +35,8 @@ class StudentApp(App):
                                      pos_hint={'x': 0.25, 'y': 0.2})
         self.imageLayout.add_widget(self.imageObj)
         # widgets for input
-        self.rollNoL = Label(text="Roll No:")
-        self.AttendanceCodeL = Label(text="Attendance Code: ")
+        self.rollNoL = MDLabel(text="Roll No:")
+        self.AttendanceCodeL = MDLabel(text="Attendance Code: ")
 
         self.rollNoT = TextInput(hint_text="Enter Roll no :")
         self.AttendanceCodeT = TextInput(hint_text="Enter Attendance Code : ")
@@ -58,7 +57,7 @@ class StudentApp(App):
         self.inputLayout.add_widget(self.AttendanceCodeT)
 
         # Message label
-        self.messageL = Label(text="Authenticate your face:")
+        self.messageL = MDLabel(text="Authenticate your face:")
         # Layout for Message
         self.messageLayout = BoxLayout(orientation="vertical",
                                        size_hint=(0.8, 0.2),
@@ -72,7 +71,7 @@ class StudentApp(App):
         self.cameraObj.resolution = (640, 480)
 
         # Capture Button
-        self.buttonObj = Button(text="Capture")
+        self.buttonObj = MDRaisedButton(text="Capture")
         self.buttonObj.size_hint = (.2, .15)
         self.buttonObj.pos_hint = {'x': .45, 'y': .2}
         self.buttonObj.bind(on_press=self.takeImage)
