@@ -5,4 +5,5 @@ subjectId = ""
 subjectname = ""
 attendanceId = ""
 attendanceList ={}
+attendanceToBeDone =[]
 

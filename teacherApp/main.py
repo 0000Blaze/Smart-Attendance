@@ -1,18 +1,14 @@
-import imp
 import GlobalShared
 from server import client_teacher
 
 from kivymd.app import MDApp
-from kivy.clock import Clock
-
-from kivy.lang import Builder
-from kivy.properties import StringProperty
 
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton
-from kivymd.uix.datatables import MDDataTable, TableHeader, TableData, TablePagination
-from kivymd.uix.dialog import BaseDialog
+from kivymd.uix.datatables import MDDataTable
 
+from kivy.lang import Builder
+from kivy.properties import StringProperty
 from kivy.metrics import dp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
@@ -121,7 +117,7 @@ class AttendanceWindow(Screen):
                 keys = AttendanceListFromServer["student_list"]
                 for key in keys:
                     GlobalShared.attendanceList[key][1] = "Present"
-                    # self.removePresentList()
+                    self.on_enter()
                 #display attendance list
                 # self.addPresentList()
         except Exception as e:
@@ -132,24 +128,25 @@ class AttendanceWindow(Screen):
             AttendanceListFromServer = client_teacher.stopAttendance(GlobalShared.teacherId,GlobalShared.classId)
             if "error" in AttendanceListFromServer:
                 print(AttendanceListFromServer["error"])
-                # AttendanceControlWindow.setAfterAttendanceMessage(AttendanceListFromServer["error"])
             else:
                 print(AttendanceListFromServer["success"])
         except Exception as e:
             print(e)
 
-    def manualPresent(self,text):
+    def manualPresent(self,*args):
+        #print("Before",GlobalShared.attendanceToBeDone)
         try:
-            text.text =str(text.text).upper()
-            if (text.text != ""):
-                client_teacher.markAttendance(GlobalShared.teacherId,GlobalShared.classId,text.text)
-            text.text = ""
+            for text in GlobalShared.attendanceToBeDone:
+                client_teacher.markAttendance(GlobalShared.teacherId,GlobalShared.classId,text)
         except:
             print("some error occured during manual attendance")        
 
+        while len(GlobalShared.attendanceToBeDone) > 0 : GlobalShared.attendanceToBeDone.pop()
+        #print("After",GlobalShared.attendanceToBeDone)
+
     def load_table(self):
+        #list to make attendance list a list for initial insert in data table
         AttendListMini = [] 
-        
         for key in GlobalShared.attendanceList:
             AttendListMini.append(key)
             AttendListMini.append(GlobalShared.attendanceList[key][0])
@@ -160,7 +157,7 @@ class AttendanceWindow(Screen):
         self.data_tables = MDDataTable(
             pos_hint={'center_y': 0.5, 'center_x': 0.5},
             size_hint=(0.7, 0.6),
-            use_pagination=True,
+            rows_num = 48 ,
             check=True,
             column_data=[
                 ("Roll Number", dp(40)),
@@ -170,15 +167,31 @@ class AttendanceWindow(Screen):
                 for i in range(int(len(AttendListMini)/3))], 
                 )
         
+        self.data_tables.bind(on_check_press=self.check_press) 
+
         self.stop_btn = MDRaisedButton(
             text="Stop",
-            pos_hint = {'center_y': 0.1, 'center_x': 0.5}
+            pos_hint = {'center_y': 0.1, 'center_x': 0.6}
         )
         self.stop_btn.bind(on_press = self.finalAttendanceSheet)
         
+        self.present_btn = MDRaisedButton(
+            text="Present",
+            pos_hint = {'center_y': 0.1, 'center_x': 0.3}
+        )
+        self.present_btn.bind(on_press = self.manualPresent)
+
         self.add_widget(self.data_tables)
         self.add_widget(self.stop_btn)
+        self.add_widget(self.present_btn)
         return layout
+
+
+############### ERROR , multiple calls for a single click after 3 clicks apparent
+
+    def check_press(self,instance_table,current_row):
+        print(current_row[0])
+        GlobalShared.attendanceToBeDone.append(current_row[0])
 
     def on_enter(self):
         self.load_table()
