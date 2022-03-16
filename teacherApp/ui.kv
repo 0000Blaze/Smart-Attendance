@@ -1,3 +1,7 @@
+#:set cardColor [0.796875, 0.8984375, 0.99609375, 1]
+#:set textColor [1,1,1,1]
+#:set backgroundColor [0.59765625, 0.8046875, 0.99609375, 1]
+
 ScreenManager:
     LoginWindow:
         id:login_control
@@ -8,17 +12,28 @@ ScreenManager:
     name: 'login_control'
     
     MDBoxLayout:
+        color_mode : "custom"
+        md_bg_color : backgroundColor
+    
+    MDBoxLayout:
+        size_hint:(0.15, 0.15)
+        pos_hint:{'center_x': .5, 'center_y': .9}
+    
+        Image:
+            source: "./assets/icon.png"
+        
+    MDBoxLayout:
         id: first_box
         columns : 5
-        spacing: "40dp"
+        spacing: "30dp"
         pos_hint: {'center_x': .5, 'center_y': .5}
         orientation: 'vertical'
         adaptive_height : True
-        #md_bg_color : app.theme_cls.primary_color
-        
-        FitImage:
-            source: "assets/logo.png"
-            #size_hint : 0.5 , 0.5
+        color_mode: "custom"
+        md_bg_color : cardColor
+        size_hint : 0.5 , 0.65
+        radius : [40,40,40,40]
+
 
         MDBoxLayout:
             id: teacherId_box
@@ -26,18 +41,21 @@ ScreenManager:
             orientation: 'vertical'
             adaptive_height : True
             size_hint: 0.5,1.0
- 
+
             MDTextField:
                 id: teacherId
                 name:"teacherId"
-                pos_hint: {'center_x': .5, 'center_y': .5}
+                pos_hint: {'center_x': .5, 'center_y': .2}
                 hint_text: "Teacher Id"
-                mode: "rectangle"
+                #mode: "rectangle"
+                color_mode : "custom"
+                line_color_normal: textColor
+                line_color_focus : textColor
+                hint_text_color : textColor
 
         MDRaisedButton:
             text:"Connect"
             pos_hint: {'center_x': .5, 'center_y': .5}
-            md_bg_color: 1, 0, 1, 1
             on_press:
                 root.stdTid.setTeacherId(app,teacherId)
                 root.getSubjectListAndClassList()
@@ -59,18 +77,26 @@ ScreenManager:
         MDRaisedButton:
             text:"Start"
             pos_hint: {'center_x': .5, 'center_y': .5}
-            md_bg_color: 1, 0, 1, 1
+            #md_bg_color: 1, 0, 1, 1
             on_press:
                 root.startAttendanceSheet()
                 root.manager.current = 'attendance_control'
                 root.manager.transition.direction = 'left'
                 app.root.ids.attendance_control.updateAttendanceSheet()
                 app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
-                
+        
+        MDLabel:
+            text:""
+            size_hint : 0.05,0.05
 
 <AttendanceWindow>
     name :'attendance_control'
 
+    MDBoxLayout:
+        color_mode : "custom"
+        md_bg_color : backgroundColor
+    
+    
     MDBoxLayout:
         id : "attendance_box"
         orientation: 'vertical'

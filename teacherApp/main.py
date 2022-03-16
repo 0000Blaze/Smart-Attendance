@@ -120,7 +120,6 @@ class AttendanceWindow(Screen):
                     self.widgetRemover()
                     self.on_enter()
                 #display attendance list
-                # self.addPresentList()
         except Exception as e:
             print(e)
 
