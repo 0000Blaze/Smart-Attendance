@@ -1,4 +1,4 @@
-WindowManager:
+ScreenManager:
     LoginWindow:
         id:login_control
     AttendanceWindow:
@@ -16,7 +16,7 @@ WindowManager:
         adaptive_height : True
         #md_bg_color : app.theme_cls.primary_color
         
-        Image:
+        FitImage:
             source: "assets/logo.png"
             #size_hint : 0.5 , 0.5
 
@@ -66,6 +66,7 @@ WindowManager:
                 root.manager.transition.direction = 'left'
                 app.root.ids.attendance_control.updateAttendanceSheet()
                 app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
+                
 
 <AttendanceWindow>
     name :'attendance_control'
@@ -75,7 +76,7 @@ WindowManager:
         orientation: 'vertical'
         columns: 3
         spacing: "40dp"
-        pos_hint: {"center_x": .5, "center_y": .5}
+        pos_hint: {"center_x": .5, "center_y": .9}
         adaptive_height : True
         #md_bg_color : app.theme_cls.primary_color
 
@@ -87,11 +88,9 @@ WindowManager:
             pos_hint: {"center_x": .5, "center_y": .5}
             size_hint: 0.5,1.0
 
-            Image:
-                source: "assets/logo.png"
-                size_hint : 0.2 , 0.2
-                size: 0.1,0.1
-            
+            MDLabel:
+                text: "Attendance will time out in 10 minutes"
+
             MDRaisedButton:
                 text :"Back"
                 pos_hint: {"center_x": .5, "center_y": .5}
@@ -118,10 +117,5 @@ WindowManager:
                     root.attendanceInstance.setAttendanceId()
                     root.updateAttendanceSheet()
 
-        MDRaisedButton:
-            text:"Stop"
-            pos_hint: {"center_x": .5, "center_y": .5}
-            on_press:
-                root.finalAttendanceSheet()
 
 

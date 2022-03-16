@@ -3,14 +3,19 @@ import GlobalShared
 from server import client_teacher
 
 from kivymd.app import MDApp
+from kivy.clock import Clock
 
-from kivy.uix.widget import Widget
-from kivymd.uix.label import MDLabel
-
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-
 from kivy.properties import StringProperty
+
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.datatables import MDDataTable, TableHeader, TableData, TablePagination
+from kivymd.uix.dialog import BaseDialog
+
+from kivy.metrics import dp
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.widget import Widget
 
 ############################# classes for various data to and fro from kv and python side ###############################
 #teacher id input class
@@ -111,7 +116,6 @@ class AttendanceWindow(Screen):
             AttendanceListFromServer = client_teacher.getAttendance(GlobalShared.teacherId,GlobalShared.classId)
             if "error" in AttendanceListFromServer:
                 print(AttendanceListFromServer["error"])
-                # AttendanceControlWindow.setAfterAttendanceMessage(AttendanceListFromServer["error"])
             else:
                 #update presence in list
                 keys = AttendanceListFromServer["student_list"]
@@ -123,7 +127,7 @@ class AttendanceWindow(Screen):
         except Exception as e:
             print(e)
 
-    def finalAttendanceSheet(self):
+    def finalAttendanceSheet(self,*args):
         try:
             AttendanceListFromServer = client_teacher.stopAttendance(GlobalShared.teacherId,GlobalShared.classId)
             if "error" in AttendanceListFromServer:
@@ -141,12 +145,48 @@ class AttendanceWindow(Screen):
                 client_teacher.markAttendance(GlobalShared.teacherId,GlobalShared.classId,text.text)
             text.text = ""
         except:
-            print("some error occured during manual attendance")
+            print("some error occured during manual attendance")        
 
+    def load_table(self):
+        AttendListMini = [] 
+        
+        for key in GlobalShared.attendanceList:
+            AttendListMini.append(key)
+            AttendListMini.append(GlobalShared.attendanceList[key][0])
+            AttendListMini.append(GlobalShared.attendanceList[key][1])
+
+        layout = MDBoxLayout()
+
+        self.data_tables = MDDataTable(
+            pos_hint={'center_y': 0.5, 'center_x': 0.5},
+            size_hint=(0.7, 0.6),
+            use_pagination=True,
+            check=True,
+            column_data=[
+                ("Roll Number", dp(40)),
+                ("Student", dp(30)),
+                ("Presence", dp(30)), ],
+            row_data=[(AttendListMini[i*3], AttendListMini[(i*3)+1], AttendListMini[(i*3)+2])
+                for i in range(int(len(AttendListMini)/3))], 
+                )
+        
+        self.stop_btn = MDRaisedButton(
+            text="Stop",
+            pos_hint = {'center_y': 0.1, 'center_x': 0.5}
+        )
+        self.stop_btn.bind(on_press = self.finalAttendanceSheet)
+        
+        self.add_widget(self.data_tables)
+        self.add_widget(self.stop_btn)
+        return layout
+
+    def on_enter(self):
+        self.load_table()
 
 ################################### Kivy app builder ###################################
-class WindowManager(ScreenManager):
-    pass
+sm = ScreenManager()
+sm.add_widget(LoginWindow())
+sm.add_widget(AttendanceWindow(name ='attendance_control'))
 
 class MainApp(MDApp):
     def __init__(self, **kwargs):
@@ -154,7 +194,8 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
 
     def build(self):
-        self.root = Builder.load_file("ui.kv")
+        screen = Builder.load_file("ui.kv")
+        return screen
 
 if __name__ == "__main__":
     MainApp().run()
