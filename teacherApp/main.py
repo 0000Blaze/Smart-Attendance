@@ -117,6 +117,7 @@ class AttendanceWindow(Screen):
                 keys = AttendanceListFromServer["student_list"]
                 for key in keys:
                     GlobalShared.attendanceList[key][1] = "Present"
+                    self.widgetRemover()
                     self.on_enter()
                 #display attendance list
                 # self.addPresentList()
@@ -186,15 +187,17 @@ class AttendanceWindow(Screen):
         self.add_widget(self.present_btn)
         return layout
 
-
-############### ERROR , multiple calls for a single click after 3 clicks apparent
-
     def check_press(self,instance_table,current_row):
         print(current_row)
         GlobalShared.attendanceToBeDone.append(current_row[0])
 
     def on_enter(self):
         self.load_table()
+
+    def widgetRemover(self):
+        self.remove_widget(self.data_tables)
+        self.remove_widget(self.stop_btn)
+        self.remove_widget(self.present_btn)
 
 ################################### Kivy app builder ###################################
 sm = ScreenManager()
