@@ -190,7 +190,7 @@ class AttendanceWindow(Screen):
 ############### ERROR , multiple calls for a single click after 3 clicks apparent
 
     def check_press(self,instance_table,current_row):
-        print(current_row[0])
+        print(current_row)
         GlobalShared.attendanceToBeDone.append(current_row[0])
 
     def on_enter(self):
