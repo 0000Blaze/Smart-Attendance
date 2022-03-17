@@ -92,7 +92,6 @@ ScreenManager:
             on_press:
                 root.startAttendanceSheet()
                 app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
-                app.root.ids.attendance_control.updateAttendanceSheet()
                 root.manager.current = 'attendance_control'
                 root.manager.transition.direction = 'left'
         

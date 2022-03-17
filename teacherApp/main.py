@@ -26,18 +26,19 @@ class TeacherInput(Widget):
         if textIp != "":
             app.teacherId = textIp.text
             GlobalShared.teacherId = app.teacherId
+            # textIp.text =""
         else:
             print("teacherId text empty")
             
     def setClassId(self,app,textIp):
         if textIp != "":
             app.classId = textIp.text.upper()
-            GlobalShared.classId = app.teacherId
+            GlobalShared.classId = app.classId
+            textIp.text = GlobalShared.classId
             print(GlobalShared.classId)
+            # textIp.text =""
         else:
             print("classId text empty")
-
-        self.field_class = GlobalShared.classId
 
     def setSubjectCode(self):
         try:
