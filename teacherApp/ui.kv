@@ -67,9 +67,10 @@ ScreenManager:
             text:"Connect"
             pos_hint: {'center_x': .5, 'center_y': .5}
             on_press:
+                #root.connect_callback(app,teacherId,classId)
                 root.stdTid.setTeacherId(app,teacherId)
-                root.getSubjectListAndClassList()
                 root.stdTid.setClassId(app,classId)
+                root.getSubjectListAndClassList()
                 root.stdTid.setSubjectCode()
         
         MDBoxLayout:

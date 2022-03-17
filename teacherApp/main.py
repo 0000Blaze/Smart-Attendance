@@ -7,6 +7,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.dialog import MDDialog
 
 from kivy.lang import Builder
 from kivy.properties import StringProperty
@@ -29,12 +30,13 @@ class TeacherInput(Widget):
             print("teacherId text empty")
             
     def setClassId(self,app,textIp):
-        # if textIp != "":
-        #     app.classId = textIp.text.upper()
-        #     GlobalShared.classId = app.teacherId
-        #     print(GlobalShared.classId)
-        # else:
-        #     print("classId text empty")
+        if textIp != "":
+            app.classId = textIp.text.upper()
+            GlobalShared.classId = app.teacherId
+            print(GlobalShared.classId)
+        else:
+            print("classId text empty")
+
         self.field_class = GlobalShared.classId
 
     def setSubjectCode(self):
@@ -69,20 +71,30 @@ class LoginWindow(Screen):
     stdTid.field_class = 'Example: PUL075BCTCD'
     stdTid.field_subject = 'Not Connected'
 
+    
+    # def connect_callback(self,app,teacherId,classId):
+    #     self.stdTid.setTeacherId(app,teacherId)
+    #     self.getSubjectListAndClassList()
+    #     self.stdTid.setClassId(app,classId)
+    #     self.stdTid.setSubjectCode()
+        
+
     def getSubjectListAndClassList(self):
         try:
             classListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
+            
             #print individual class id that teacher teaches        
             for i in classListFromServer["class"]:
                 GlobalShared.classList.append(i)
             
-            #print(GlobalShared.classList)
-            
+            #print(GlobalShared.classList[1][1])
             GlobalShared.classId = classListFromServer["class"][1][0]       #first index 0 is bctAB and 1 is bctCD for now
             GlobalShared.className = classListFromServer["class"][1][1]
-        
+            print(GlobalShared.classId,GlobalShared.className)
+
+
         except:
-            print("Class retrival error")
+            print("Class retrival error from server")
         
         try:
             subjectListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
@@ -228,7 +240,9 @@ class MainApp(MDApp):
 
     def build(self):
         screen = Builder.load_file("ui.kv")
+        self.messageDialog = MDDialog(text="Dialog",size_hint=(0.8, 0.2),radius=[20, 7, 20, 7])
         return screen
+
 
 if __name__ == "__main__":
     MainApp().run()
