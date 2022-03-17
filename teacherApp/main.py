@@ -157,18 +157,23 @@ class AttendanceWindow(Screen):
         self.data_tables = MDDataTable(
             pos_hint={'center_y': 0.5, 'center_x': 0.5},
             size_hint=(0.7, 0.6),
-            rows_num = 48 ,
+            rows_num = 48,
             check=True,
+            # use_pagination=True,
             column_data=[
                 ("Roll Number", dp(40)),
                 ("Student", dp(30)),
                 ("Presence", dp(30)), ],
-            row_data=[(AttendListMini[i*3], AttendListMini[(i*3)+1], AttendListMini[(i*3)+2])
-                for i in range(int(len(AttendListMini)/3))], 
+            row_data=[
+                (AttendListMini[i*3], AttendListMini[(i*3)+1], AttendListMini[(i*3)+2])
+                for i in range(int(len(AttendListMini)/3))
+                # (f"{i + 1}", "2.23", "3.65")
+                # for i in range(50)
+                ], 
                 )
         
         self.data_tables.bind(on_check_press=self.check_press) 
-
+        
         self.stop_btn = MDRaisedButton(
             text="Stop",
             pos_hint = {'center_y': 0.1, 'center_x': 0.6}
