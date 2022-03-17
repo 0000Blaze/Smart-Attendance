@@ -6,6 +6,7 @@ from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.datatables import MDDataTable
+from kivymd.uix.menu import MDDropdownMenu
 
 from kivy.lang import Builder
 from kivy.properties import StringProperty
@@ -65,6 +66,21 @@ class LoginWindow(Screen):
     stdTid.field_class = 'Not Connected'
     stdTid.field_subject = 'Not Connected'
 
+    # menu_items = [
+    #     {
+    #         "text": f"Item {i}",
+    #         "viewclass": "OneLineListItem",
+    #         "on_release": lambda x=f"Item {i}": self.menu_callback(x),
+    #     } for i in range(5)
+    # ]
+
+    # menu = MDDropdownMenu(
+    #     items=menu_items,
+    #     width_mult=4,
+    #     caller = self.ids.first_box.ids.select_class
+    #     )
+
+
     def getSubjectListAndClassList(self):
         try:
             classListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
@@ -96,14 +112,11 @@ class LoginWindow(Screen):
         except:
             print("Subject retrival error")
 
-    
     def setClass(self):
         pass
 
     def setSubject(self):
         pass
-
-
 
     def startAttendanceSheet(self):
         try:
@@ -123,6 +136,10 @@ class LoginWindow(Screen):
         except Exception as e:
             print("error :", e)
         
+    # def menu_callback(self, text_item):
+    #     print(text_item)
+
+
 
 class AttendanceWindow(Screen):
     attendanceInstance = AttendanceDetail()        
@@ -159,8 +176,10 @@ class AttendanceWindow(Screen):
                 client_teacher.markAttendance(GlobalShared.teacherId,GlobalShared.classId,text)
         except:
             print("some error occured during manual attendance")        
-
+        #empty selected check for presence
         while len(GlobalShared.attendanceToBeDone) > 0 : GlobalShared.attendanceToBeDone.pop()
+
+        self.updateAttendanceSheet()
         
     def load_table(self):
         #list to make attendance list a list for initial insert in data table
@@ -199,7 +218,7 @@ class AttendanceWindow(Screen):
         self.stop_btn.bind(on_press = self.finalAttendanceSheet)
         
         self.present_btn = MDRaisedButton(
-            text="Present",
+            text="Mark Present",
             pos_hint = {'center_y': 0.1, 'center_x': 0.3}
         )
         self.present_btn.bind(on_press = self.manualPresent)
@@ -223,7 +242,7 @@ class AttendanceWindow(Screen):
 
 ################################### Kivy app builder ###################################
 sm = ScreenManager()
-sm.add_widget(LoginWindow())
+sm.add_widget(LoginWindow(name='login_control'))
 sm.add_widget(AttendanceWindow(name ='attendance_control'))
 
 class MainApp(MDApp):
