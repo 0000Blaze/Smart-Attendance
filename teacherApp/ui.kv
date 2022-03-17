@@ -63,16 +63,18 @@ ScreenManager:
                 root.stdTid.setSubjectCode()
         
         MDDropDownItem:
-            id: drop_item
+            id: select_class
             pos_hint: {'center_x': .5, 'center_y': .5}
             text: 'Class'
-            on_release: self.set_item(root.stdTid.field_class)
+            on_release: 
+                self.set_item(root.stdTid.field_class)
         
         MDDropDownItem:
-            id: drop_item
+            id: select_subject
             pos_hint: {'center_x': .5, 'center_y': .5}
             text: 'Subject'
-            on_release: self.set_item(root.stdTid.field_subject)
+            on_release: 
+                self.set_item(root.stdTid.field_subject)
 
         MDRaisedButton:
             text:"Start"

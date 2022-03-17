@@ -24,7 +24,6 @@ class TeacherInput(Widget):
         if textIp != "":
             app.teacherId = textIp.text
             GlobalShared.teacherId = app.teacherId
-            print(GlobalShared.teacherId)
         else:
             print("text empty")
             
@@ -37,8 +36,8 @@ class TeacherInput(Widget):
     def setSubjectCode(self):
         try:
             self.field_subject = GlobalShared.subjectname
-            # if len(GlobalShared.subjectname)>20:
-            #     self.field_subject = GlobalShared.subjectname[:18]+"..."
+            if len(GlobalShared.subjectname)>20:
+                self.field_subject = GlobalShared.subjectname[:18]+"..."
             print(self.field_subject)
         except:
             print("error setting scode")
@@ -63,25 +62,47 @@ class AttendanceDetail(Widget):
 class LoginWindow(Screen):
     stdTid = TeacherInput()
     stdTid.field_id = 'Example : 011'
-    stdTid.field_class = 'Example : PUL075BCTCD'
-    stdTid.field_subject = 'Example : Database Management System'
+    stdTid.field_class = 'Not Connected'
+    stdTid.field_subject = 'Not Connected'
 
     def getSubjectListAndClassList(self):
         try:
             classListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
-            GlobalShared.classId = classListFromServer["class"][0][0]
-            GlobalShared.className = classListFromServer["class"][0][1]
-            print(GlobalShared.classId, GlobalShared.className)
+            
+            #print individual class id that teacher teaches        
+            for i in classListFromServer["class"]:
+                GlobalShared.classList.append(i)
+            
+            print(GlobalShared.classList)
+            
+            GlobalShared.classId = classListFromServer["class"][1][0]       #first index 0 is bctAB and 1 is bctCD for now
+            GlobalShared.className = classListFromServer["class"][1][1]
+        
         except:
             print("Class retrival error")
         
         try:
             subjectListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
-            GlobalShared.subjectId = subjectListFromServer["subject"][0][0]
-            GlobalShared.subjectname = subjectListFromServer["subject"][0][1]
-            print(GlobalShared.subjectId, GlobalShared.subjectname)
+            
+            #get subject list of each class teached by teacher
+            for i in subjectListFromServer["subject"]:
+                GlobalShared.subjectList.append(i)
+            
+            print(GlobalShared.subjectList)
+            
+            GlobalShared.subjectId = subjectListFromServer["subject"][1][0]     
+            GlobalShared.subjectname = subjectListFromServer["subject"][1][1]
+
         except:
             print("Subject retrival error")
+
+    
+    def setClass(self):
+        pass
+
+    def setSubject(self):
+        pass
+
 
 
     def startAttendanceSheet(self):
@@ -117,9 +138,8 @@ class AttendanceWindow(Screen):
                 keys = AttendanceListFromServer["student_list"]
                 for key in keys:
                     GlobalShared.attendanceList[key][1] = "Present"
-                    self.widgetRemover()
-                    self.on_enter()
-                #display attendance list
+                    self.widgetRemover()            #removes old instance of datatable,stop and present button
+                    self.on_enter()                 #adds data table , stop and present button
         except Exception as e:
             print(e)
 
@@ -134,7 +154,6 @@ class AttendanceWindow(Screen):
             print(e)
 
     def manualPresent(self,*args):
-        #print("Before",GlobalShared.attendanceToBeDone)
         try:
             for text in GlobalShared.attendanceToBeDone:
                 client_teacher.markAttendance(GlobalShared.teacherId,GlobalShared.classId,text)
@@ -142,8 +161,7 @@ class AttendanceWindow(Screen):
             print("some error occured during manual attendance")        
 
         while len(GlobalShared.attendanceToBeDone) > 0 : GlobalShared.attendanceToBeDone.pop()
-        #print("After",GlobalShared.attendanceToBeDone)
-
+        
     def load_table(self):
         #list to make attendance list a list for initial insert in data table
         AttendListMini = [] 
