@@ -51,6 +51,17 @@ ScreenManager:
                 line_color_normal: textColor
                 line_color_focus : textColor
                 hint_text_color : textColor
+            
+            MDTextField:
+                id: classId
+                name:"classId"
+                pos_hint: {'center_x': .5, 'center_y': .2}
+                hint_text: "Class Id"
+                #mode: "rectangle"
+                color_mode : "custom"
+                line_color_normal: textColor
+                line_color_focus : textColor
+                hint_text_color : textColor
 
         MDRaisedButton:
             text:"Connect"
@@ -58,22 +69,20 @@ ScreenManager:
             on_press:
                 root.stdTid.setTeacherId(app,teacherId)
                 root.getSubjectListAndClassList()
-                root.stdTid.setClassId()
+                root.stdTid.setClassId(app,classId)
                 root.stdTid.setSubjectCode()
         
-        MDDropDownItem:
-            id: select_class
+        MDBoxLayout:
+            id: subjectLabel_box
             pos_hint: {'center_x': .5, 'center_y': .5}
-            text: 'Class'
-            on_release: 
-                self.set_item(root.stdTid.field_class)
-        
-        MDDropDownItem:
-            id: select_subject
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            text: 'Subject'
-            on_release: 
-                self.set_item(root.stdTid.field_subject)
+            orientation: 'vertical'
+            adaptive_height : True
+            size_hint: 0.5,0.5
+
+            MDLabel:
+                id: subjectName
+                pos_hint: {'center_x': .5, 'center_y': .5} 
+                text: root.stdTid.field_subject
 
         MDRaisedButton:
             text:"Start"
@@ -81,10 +90,10 @@ ScreenManager:
             #md_bg_color: 1, 0, 1, 1
             on_press:
                 root.startAttendanceSheet()
+                app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
+                app.root.ids.attendance_control.updateAttendanceSheet()
                 root.manager.current = 'attendance_control'
                 root.manager.transition.direction = 'left'
-                app.root.ids.attendance_control.updateAttendanceSheet()
-                app.root.ids.attendance_control.attendanceInstance.setAttendanceId()
         
         MDLabel:
             text:""
@@ -143,6 +152,3 @@ ScreenManager:
                 on_press:
                     root.attendanceInstance.setAttendanceId()
                     root.updateAttendanceSheet()
-
-
-

@@ -26,19 +26,22 @@ class TeacherInput(Widget):
             app.teacherId = textIp.text
             GlobalShared.teacherId = app.teacherId
         else:
-            print("text empty")
+            print("teacherId text empty")
             
-    def setClassId(self):
-        try:
-            self.field_class = GlobalShared.classId
-        except:
-            print("error setting ClassCode")
-    
+    def setClassId(self,app,textIp):
+        # if textIp != "":
+        #     app.classId = textIp.text.upper()
+        #     GlobalShared.classId = app.teacherId
+        #     print(GlobalShared.classId)
+        # else:
+        #     print("classId text empty")
+        self.field_class = GlobalShared.classId
+
     def setSubjectCode(self):
         try:
             self.field_subject = GlobalShared.subjectname
-            if len(GlobalShared.subjectname)>20:
-                self.field_subject = GlobalShared.subjectname[:18]+"..."
+            # if len(GlobalShared.subjectname)>20:
+            #     self.field_subject = GlobalShared.subjectname[:18]+"..."
             print(self.field_subject)
         except:
             print("error setting scode")
@@ -63,33 +66,17 @@ class AttendanceDetail(Widget):
 class LoginWindow(Screen):
     stdTid = TeacherInput()
     stdTid.field_id = 'Example : 011'
-    stdTid.field_class = 'Not Connected'
+    stdTid.field_class = 'Example: PUL075BCTCD'
     stdTid.field_subject = 'Not Connected'
-
-    # menu_items = [
-    #     {
-    #         "text": f"Item {i}",
-    #         "viewclass": "OneLineListItem",
-    #         "on_release": lambda x=f"Item {i}": self.menu_callback(x),
-    #     } for i in range(5)
-    # ]
-
-    # menu = MDDropdownMenu(
-    #     items=menu_items,
-    #     width_mult=4,
-    #     caller = self.ids.first_box.ids.select_class
-    #     )
-
 
     def getSubjectListAndClassList(self):
         try:
             classListFromServer = client_teacher.updateClassAndSubjects(GlobalShared.teacherId)
-            
             #print individual class id that teacher teaches        
             for i in classListFromServer["class"]:
                 GlobalShared.classList.append(i)
             
-            print(GlobalShared.classList)
+            #print(GlobalShared.classList)
             
             GlobalShared.classId = classListFromServer["class"][1][0]       #first index 0 is bctAB and 1 is bctCD for now
             GlobalShared.className = classListFromServer["class"][1][1]
@@ -104,19 +91,13 @@ class LoginWindow(Screen):
             for i in subjectListFromServer["subject"]:
                 GlobalShared.subjectList.append(i)
             
-            print(GlobalShared.subjectList)
+            #print(GlobalShared.subjectList)
             
             GlobalShared.subjectId = subjectListFromServer["subject"][1][0]     
             GlobalShared.subjectname = subjectListFromServer["subject"][1][1]
 
         except:
             print("Subject retrival error")
-
-    def setClass(self):
-        pass
-
-    def setSubject(self):
-        pass
 
     def startAttendanceSheet(self):
         try:
@@ -136,11 +117,6 @@ class LoginWindow(Screen):
         except Exception as e:
             print("error :", e)
         
-    # def menu_callback(self, text_item):
-    #     print(text_item)
-
-
-
 class AttendanceWindow(Screen):
     attendanceInstance = AttendanceDetail()        
     attendanceInstance.field_AttendanceId = 'No attendance code'
