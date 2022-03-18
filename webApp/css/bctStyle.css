@@ -68,6 +68,7 @@ body{
     height: 100%;
     width: 80%;
     margin: 0 auto;
+    padding-top: 20%;
 }
 /******************** SEARCH FORM ******************/
 .search-form{
@@ -89,7 +90,7 @@ body{
 /******************** BUTTONS CLASS ********************/
 /* card floater */
 .card-holder{
-    display: flex;
+    /* display: flex; */
     float: left;
     /* margin-top: 1rem;
     margin-left: 0.5rem; */
