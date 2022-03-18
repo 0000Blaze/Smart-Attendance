@@ -96,13 +96,13 @@ class StudentApp(MDApp):
         inputLayout2.md_bg_color = textInpBgColor
         # Adding widgets for input to input layout
         inputLayout.add_widget(MDLabel())
-        inputLayout.add_widget(rollNoL)
+        #inputLayout.add_widget(rollNoL)
         inputLayout.add_widget(self.rollNoT)
         inputLayout2.add_widget(MDLabel())
 
         # inputLayout.add_widget(MDLabel())
         inputLayout2.add_widget(MDLabel())
-        inputLayout2.add_widget(AttendanceCodeL)
+        #inputLayout2.add_widget(AttendanceCodeL)
         inputLayout2.add_widget(self.AttendanceCodeT)
         inputLayout2.add_widget(MDLabel())
 
@@ -145,6 +145,7 @@ class StudentApp(MDApp):
         # Camera object
         self.cameraObj = Camera()
         self.cameraObj.resolution = (640, 480)
+        self.cameraObj.play = True
         cameraLayout = MDBoxLayout(size_hint=(0.8, 1),
                                    pos_hint={'x': 0.1})
         cameraLayout.add_widget(self.cameraObj)
