@@ -17,3 +17,7 @@
 - Ravi Pandey
 - Rohan Chhetry
 - Yukta Bansal
+
+# Git link to development repo
+
+- https://github.com/0000Blaze/Smart-Attendance-demo
