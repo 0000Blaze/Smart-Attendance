@@ -2,7 +2,7 @@ import mysql.connector
 
 dbinfo = {'host': 'localhost',
           'user': 'root',
-          'password': 'Ashutosh123$',
+          'password': '',
           'port': 3306,
           'database': 'sas'}
 
