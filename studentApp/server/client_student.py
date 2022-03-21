@@ -2,7 +2,9 @@ import json
 import socket
 import server.communication_json as communication_json
 
-attendance_server = {'host': '127.0.0.1', 'port': 60000}
+# attendance_server = {'host': '127.0.0.1', 'port': 60000}
+attendance_server = {'host': '192.168.152.108', 'port': 60000}
+#attendance_server = {'host': '192.168.1.65', 'port': 60000}
 SERVER_TIMEOUT = 30 #timeout after 20 seconds if server didn't respond
 
 

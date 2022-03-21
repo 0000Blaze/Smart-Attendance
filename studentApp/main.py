@@ -1,12 +1,8 @@
-from email import message
-from ssl import OP_NO_COMPRESSION
 import server.client_student
-
 
 import cv2
 import face_recognition
 import os
-from time import sleep
 
 from kivy.core.window import Window
 from kivymd.app import MDApp
@@ -22,13 +18,13 @@ from kivymd.uix.dialog import MDDialog
 textColor = [0, 0, 0, 1]
 dialogTextColor = [0, 0, 0, 1]
 textInpBgColor = [0.796875, 0.8984375, 0.99609375, 1]
-# appBgColor = [0.390625, 0.32421875, 0.83203125, 1]
 appBgColor = [0.30078125, 0.76171875, 0.99609375, 1]
 textLineColorFocus = [0.01171875, 0.515625, 0.984375, 1]
 textLineColorNormal = [0.984375, 0.53125, 0.0117, 1]
 
 Window.top = 50
-Window.size = (540, 960)
+#Window.size = (540, 960)
+Window.size = (400,700)
 filePresent = True
 pictureRemoved = False
 try:
@@ -96,13 +92,13 @@ class StudentApp(MDApp):
         inputLayout2.md_bg_color = textInpBgColor
         # Adding widgets for input to input layout
         inputLayout.add_widget(MDLabel())
-        #inputLayout.add_widget(rollNoL)
+        # inputLayout.add_widget(rollNoL)
         inputLayout.add_widget(self.rollNoT)
         inputLayout2.add_widget(MDLabel())
 
         # inputLayout.add_widget(MDLabel())
         inputLayout2.add_widget(MDLabel())
-        #inputLayout2.add_widget(AttendanceCodeL)
+        # inputLayout2.add_widget(AttendanceCodeL)
         inputLayout2.add_widget(self.AttendanceCodeT)
         inputLayout2.add_widget(MDLabel())
 
@@ -135,11 +131,11 @@ class StudentApp(MDApp):
                                     size_hint=(0.8, 0.4),
                                     pos_hint={'x': 0.1, 'y': 0.1}
                                     )
-        authenticateL = MDLabel(
+        self.authenticateL = MDLabel(
             text="Authenticate your face:", theme_text_color="Custom")
 
-        authenticateL.text_color = textColor
-        messageLayout.add_widget(authenticateL)
+        self.authenticateL.text_color = textColor
+        messageLayout.add_widget(self.authenticateL)
         # messageLayout.add_widget(self.messageDialog)
 
         # Camera object
@@ -199,18 +195,19 @@ class StudentApp(MDApp):
                     print(self.rollNo)
                     dataFromServer = server.client_student.markAttendance(
                         self.rollNo, int(self.acode), self.encodingsData)
-                    print(dataFromServer)
+                    # print(dataFromServer)
                     if "error" in dataFromServer:
                         print(dataFromServer["error"])
-                        # self.messageL.text = str(dataFromServer["error"])
+                        # self.authenticateL.text = str(dataFromServer["error"])
                         self.messageDialog.text = str(dataFromServer["error"])
                         self.messageDialog.open()
 
                     else:
                         print(dataFromServer["success"])
-                        # self.messageL.text = str(dataFromServer["success"])
-                        self.messageDialog.text = str(dataFromServer["error"])
-                        self.messageDialog.open()
+                        self.authenticateL.text = str(
+                            dataFromServer["success"])
+                        # self.messageDialog.text = str(dataFromServer["error"])
+                        # self.messageDialog.open()
 
                     try:
                         os.remove(self.filename)
@@ -232,11 +229,11 @@ class StudentApp(MDApp):
                     except Exception as e:
                         print("File error: ", e)
                 else:
-                    self.messageL.text = "No face detected. Try Again"
+                    self.authenticateL.text = "No face detected. Try Again"
                     os.remove(self.filename)
             except Exception as e:
-                print("No face detected.")
-                print("error :", e)
+                # print("No face detected.")
+                print("Error :", e)
                 if not self.pictureRemoved:
                     os.remove(self.filename)
                 self.encodingsData = None

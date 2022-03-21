@@ -4,7 +4,7 @@ import mysql.connector
 def createdb():
     host = 'localhost'
     user = 'root'
-    password = 'Ashutosh123$'
+    password = ''
     port = 3306
     dbname = 'sas'
 

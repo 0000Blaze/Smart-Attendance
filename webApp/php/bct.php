@@ -52,7 +52,6 @@
                     }   ?>
                 </select>
         </div>
-        <div class="card-holder">
         <?php
             $username = $_SESSION["username"];
             $dID = $_GET["dID"];
@@ -62,26 +61,24 @@
             {
                 if (mysqli_num_rows($class) > 0)
                 {
-                            while ($class_row = mysqli_fetch_assoc($class)) 
+                    while ($class_row = mysqli_fetch_assoc($class)) 
                     {
                         // $dId = $class_row['dID'];
                         $className = $class_row['name'];
                         $cID = $class_row['cID'];
         ?>
-        
+        <div class="card-holder">
             <button class ="btn" name="class" value ="<?php echo $cID?>" on_pesss = "SearchDataForm.submit()"> <?php echo $className?></button>
-                    
+        </div>            
                     <?php
                     }
-        
                 }
             }    
             else
             {
                 echo "Error running fetch class query";
             }?>
-        </div>
-        </form>
+            </form>
     </div>
     </div>
 </div>

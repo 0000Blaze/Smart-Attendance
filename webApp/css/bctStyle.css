@@ -68,7 +68,6 @@ body{
     height: 100%;
     width: 80%;
     margin: 0 auto;
-    padding-top: 20%;
 }
 /******************** SEARCH FORM ******************/
 .search-form{
@@ -90,12 +89,10 @@ body{
 /******************** BUTTONS CLASS ********************/
 /* card floater */
 .card-holder{
-    /* display: flex; */
+    display: flex;
     float: left;
-    /* margin-top: 1rem;
-    margin-left: 0.5rem; */
-    padding: 20%;
-    align-items: center;
+    margin-top: 1rem;
+    margin-left: 0.5rem;
 }
 .card-holder  .btn {
     width: 11rem;
@@ -133,7 +130,7 @@ footer .text1{
 }
 
 
-/* ***************8 responsive media query start **********88
+/****************8 responsive media query start **********88*/
 @media (max-width: 1104px) {
     .card {
         width: calc(25% - 20px);
@@ -161,4 +158,4 @@ footer .text1{
 .card {
         width: 100%;
       }
-} */
+}

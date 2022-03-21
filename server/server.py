@@ -16,7 +16,7 @@ import utility
 MAX_ACODE = 1000
 
 # server info
-server_ip = 'localhost'
+server_ip = '192.168.152.108'
 student_port = 60000
 teacher_port = 60001
 #updater_port = 60002
@@ -163,7 +163,7 @@ def studentConnectionListen():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sl:
         sl.bind((server_ip, student_port))
         sl.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        
+
         while(True):
             sl.listen()
             conn, addr = sl.accept()
@@ -187,7 +187,6 @@ def attendanceTimeout():
             time.sleep(ATTENDANCE_TIMEOUT_CHECK)
         else:
             attendance_scheduler.run()
-        
 
 
 # def teacherAttendanceLogFeedback(conn, class_id):
@@ -341,7 +340,8 @@ def teacherHandler(conn):
                 if not data['sid'] in students_present[data['cid']]:
                     try:
                         mysqlconn, mycursor = connect2db()
-                        mark_attendance_query = 'UPDATE record SET presence = true WHERE aID = {0} AND sID = "{1}"'.format(active_attendance[data['cid']][2], data['sid'])
+                        mark_attendance_query = 'UPDATE record SET presence = true WHERE aID = {0} AND sID = "{1}"'.format(
+                            active_attendance[data['cid']][2], data['sid'])
                         try:
                             mycursor.execute(mark_attendance_query)
                             mysqlconn.commit()
@@ -379,7 +379,7 @@ def teacherConnectionListen():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((server_ip, teacher_port))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-      
+
         while(True):
             s.listen()
             conn, addr = s.accept()
@@ -392,14 +392,40 @@ def teacherConnectionListen():
 # class and subject data updater for teacher
 def classSubjectUpdater(conn, tid):
     response = {}
+    if tid == '':
+        response['error'] = "Please supply propoer teacher id"
+        communication_json.convertSendClose(response, conn)
+        return
+    else:
+        mysqlconn, mycursor = connect2db()
+        try:
+            teacher_exists_query = 'SELECT tID,name FROM sas.teacher WHERE tID = "{}"'.format(
+                tid)
+            mycursor.execute(teacher_exists_query)
+            res = mycursor.fetchone()
+            if res == None:
+                mycursor.close()
+                response['error'] = 'You are not registered as teacher'
+                communication_json.convertSendClose(response, conn)
+                return
+            else:
+                response['teacher_name'] = res[1]
+        except mysql.connector.Error as e:
+            print(e)
+            sendSQLserverError(conn)
+            return
+        finally:
+            mycursor.close()
     try:
         mysqlconn, mycursor = connect2db()
         try:
-            classlist_query = 'SELECT cID, name FROM class INNER JOIN teaches USING (cID) WHERE tID = {0} AND teaches.`sem` != 0' .format(tid)
+            classlist_query = 'SELECT cID, name FROM class INNER JOIN teaches USING (cID) WHERE tID = {0} AND teaches.`sem` != 0' .format(
+                tid)
             mycursor.execute(classlist_query)
             result = mycursor.fetchall()
             response['class'] = result
-            subjectlist_query = 'SELECT scode, name FROM subject INNER JOIN teaches USING (scode) WHERE tID = {0} AND teaches.`sem` != 0'.format(tid)
+            subjectlist_query = 'SELECT scode, name FROM subject INNER JOIN teaches USING (scode) WHERE tID = {0} AND teaches.`sem` != 0'.format(
+                tid)
             mycursor.execute(subjectlist_query)
             result = mycursor.fetchall()
             response['subject'] = result
@@ -410,7 +436,7 @@ def classSubjectUpdater(conn, tid):
         finally:
             mycursor.close()
     except mysql.connector.Error as e:
-    	#print(e)
+        # print(e)
         sendSQLserverError(conn)
         return
 
@@ -443,15 +469,15 @@ if __name__ == '__main__':
 
     teacherlistener.start()  # listen and handle teacher clients
     studentlistener.start()  # listen and handle student clients
-    attendancetimer.start()  # stop any attendance that has not been stopped explicitly by teacher within timeout period
+    # stop any attendance that has not been stopped explicitly by teacher within timeout period
+    attendancetimer.start()
 
     while True:
         endServer = input()
-        if endServer == "q" or endServer =="Q":
+        if endServer == "q" or endServer == "Q":
             sys.exit()
 
     # wait till all threads have returned
     # teacherlistener.join()
     # studentlistener.join()
     # attendancetimer.join()
-    

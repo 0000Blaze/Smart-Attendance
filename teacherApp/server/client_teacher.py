@@ -6,6 +6,8 @@ from server import communication_json
 #from communication_json import convert2send, readall
 
 ATTENDANCE_SERVER = {'host': '127.0.0.1', 'port': 60001}
+#ATTENDANCE_SERVER = {'host': '192.168.1.65', 'port': 60001}
+#ATTENDANCE_SERVER = {'host': '192.168.152.108', 'port': 60001}
 SERVER_TIMEOUT = 30 #timeout after 20 seconds if server didn't respond
 
 def sendAttendanceData(teacher_id, class_id, subject_code, attendance_request, attendance_server, student_id = None):

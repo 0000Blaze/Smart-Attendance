@@ -1,3 +1,0 @@
-removed key functionality of datatable.py of kivyMd datatable :
-	line 213 commented as it caused error when row datas were dynamically instanciated
-	home/rohan/.local/lib/python3.9/site-packages/kivymd/uix/datatables.py

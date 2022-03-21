@@ -47,9 +47,9 @@
                 {
                     ?>
                     <h2 class="dateDisplay" style="color: white; margin-left:1%;">
-                        <?php 
+                        <!--<?php 
                             echo "Total Days = $days";   
-                        ?>
+                        ?>-->
                     </h2>
                     <table class = "styled-table" id="Attendance_Data">
                         <tr class="top">
